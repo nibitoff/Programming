@@ -23,8 +23,7 @@ public class Eating implements Dinner{
     }
     @Override
     public int hashCode(){
-        String f = this.order;
-        return f.hashCode();
+        return 13 * order.hashCode();
     }
     @Override
     public boolean equals(Object otherOb) {
