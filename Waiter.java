@@ -66,13 +66,6 @@ public class Waiter extends FairyCharacter implements ForWaiter {
         return this.mood;
     }
 
-    @Override
-    public String toString(Villain villain) {
-        return "Информация о клиенте:  "
-                + "Имя: '" + villain.getName() + '\''
-                + ", Работа: " + villain.getJob()
-                + ", Голодный: " + villain.getHunger();
-
-    }
+   
 }
 
