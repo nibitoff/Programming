@@ -114,7 +114,14 @@ public class Villain extends FairyCharacter implements ForVillain {
     public String getMood() {
         return this.mood;
     }
-
+    
+    @Override
+    public String toString() {
+        return "Info about client: "
+                + "Name " + this.getName()
+                + ", Job " + this.getJob()
+                + ", Hungry? " + this.getHunger();
+    }
 
 
 }
