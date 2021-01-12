@@ -11,6 +11,4 @@ public interface ForWaiter {
     boolean getHunger();
     void setMood(String mood);
     String getMood();
-
-    String toString(Villain villain);
 }
