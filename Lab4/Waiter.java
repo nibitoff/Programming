@@ -1,4 +1,8 @@
 public class Waiter extends FairyCharacter implements ForWaiter {
+    /**
+    Class that represents waiter's actions and values.
+    It extends FairyCharacter abstract class.
+    */
     Money coins = new Money();
     Food meals = new Food();
 
