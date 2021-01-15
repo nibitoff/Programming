@@ -1,4 +1,8 @@
 public class Villain extends FairyCharacter implements ForVillain {
+    /**
+    Class that represents villain's actions and values.
+    It extends FairyCharacter abstract class.
+    */
     Money coins = new Money();
     Food meals = new Food();
     private boolean isFree = false;
