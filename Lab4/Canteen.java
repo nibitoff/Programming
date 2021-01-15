@@ -1,4 +1,7 @@
 public final class Canteen {
+    /** 
+    Class for location Canteen
+    */
     private final String name = "Canteen";
     private final String rating = "Высокий";
     private final String distance = "Далеко";
