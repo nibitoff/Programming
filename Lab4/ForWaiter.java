@@ -1,4 +1,7 @@
 public interface ForWaiter {
+    /**
+    interface for Waiter class
+    */
     void take();
     void give(Waiter waiter);
     void setName(String name);
