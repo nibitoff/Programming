@@ -5,7 +5,6 @@ public abstract class FairyCharacter {
     protected String name;
     protected String mood;
     protected boolean hunger;
-    protected String place;
     protected String job;
     protected boolean breath;
 
