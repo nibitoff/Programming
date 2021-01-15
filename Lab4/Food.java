@@ -1,4 +1,7 @@
 public final class Food {
+    /**
+    class which represents food
+    */
     private final int foodCost = 1000;
 
     //getter for food
