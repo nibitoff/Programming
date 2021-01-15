@@ -1,5 +1,8 @@
 public class Main {
     public static void main(String[] args) throws FreedomError{
+        /** 
+        Main class 
+        */
         //creates new objects from different classes
         Villain villain = new Villain();
         Waiter waiter = new Waiter();
