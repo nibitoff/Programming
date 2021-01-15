@@ -1,4 +1,7 @@
 public final class Forest {
+    /**
+    class which rerpesents Forest location
+    */
     private final String name = "Forest";
     private final String rating = "Низкий";
     private final String distance = "Близко";
