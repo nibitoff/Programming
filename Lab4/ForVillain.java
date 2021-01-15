@@ -1,4 +1,7 @@
 public interface ForVillain {
+    /**
+    interface for Villain class
+    */
     void pay(Villain villain, Waiter waiter);
     void eat();
     void imagine();
