@@ -1,4 +1,7 @@
 public class Eating implements Dinner{
+    /**
+    class which represents eating time, place and etc
+    */
     private Mealplace currentPlace;
     private final String order = "Пирожки";
     private Mealtime currentTime;
