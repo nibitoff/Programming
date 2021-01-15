@@ -1,4 +1,6 @@
 public abstract class FairyCharacter {
+    /** abstract class for different characters 
+    */
     protected String name;
     protected String mood;
     protected boolean hunger;
