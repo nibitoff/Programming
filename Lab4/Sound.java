@@ -1,4 +1,8 @@
 public class Sound {
+    /**
+    Class that represents different actions with sound.
+    It also set status of stick.
+    */
 private boolean stickStatus = false;
 
     public String taste(){
