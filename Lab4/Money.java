@@ -1,4 +1,7 @@
 public final class Money {
+   /**
+   class which represents actions with money (like paying and etc)
+   */
    private int count;
 
    //method that realizes money paying,
