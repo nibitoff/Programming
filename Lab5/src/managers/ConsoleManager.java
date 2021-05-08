@@ -1,9 +1,11 @@
 package managers;
+
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import data.*;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -43,77 +45,74 @@ public class ConsoleManager {
                 CSVReader csvReader = new CSVReaderBuilder(reader).withSkipLines(1).build();
         ) {
             String[] nextLine;
+            int goodElements = 0;
+            int badElements = 0;
             while ((nextLine = csvReader.readNext()) != null) {
+                boolean ok = true;
                 try {
-                    fileId = Integer.valueOf(nextLine[0]);
+                     fileId = Integer.valueOf(nextLine[0]);
                 } catch (NumberFormatException e) {
-                    System.out.println("Value must be an Integer number! Check file!");
-                    System.exit(1);
+                    ok = false;
                 }
                 try {
-                    fileName = nextLine[1];
+                     fileName = nextLine[1];
                 } catch (Exception e) {
-                    System.out.println("Value must be a String! Check file!");
+                    ok = false;
                 }
                 try {
-                    fileAnnnualTurnover = Long.valueOf(nextLine[2]);
+                     fileAnnnualTurnover = Long.valueOf(nextLine[2]);
                 } catch (NumberFormatException e) {
-                    System.out.println("Value must be a Long number! Check file!");
-                    System.exit(1);
+                    ok = false;
                 }
                 try {
-                    fileCreationDate = nextLine[3];
+                     fileCreationDate = nextLine[3];
                 } catch (Exception e) {
-                    System.out.println("Value must be String! Check file!");
-                    System.exit(1);
+                    ok = false;
                 }
                 try {
-                    fileFullName = nextLine[4];
+                     fileFullName = nextLine[4];
                 } catch (Exception e) {
-                    System.out.println("Value must be String! Check file!");
-                    System.exit(1);
+                    ok = false;
                 }
                 try {
-                    fileType = OrganizationType.valueOf(nextLine[5]);
+                     fileType = OrganizationType.valueOf(nextLine[5]);
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Value must be one of enums! Check file!");
-                    System.exit(1);
+                    ok = false;
                 }
                 try {
                     String[] t1 = nextLine[6].split(" ");
-
-                    fileTown = new Location(Integer.parseInt(t1[1]), Long.parseLong(t1[2]), t1[3]);
-                    fileAddress = new Address(t1[0], fileTown);
+                     fileTown = new Location(Integer.parseInt(t1[1]), Long.parseLong(t1[2]), t1[3]);
+                     fileAddress = new Address(t1[0], fileTown);
                 } catch (Exception e) {
-                    System.out.println("Error with reading this value! Check file!");
-                    System.exit(1);
+                    ok = false;
                 }
                 try {
                     String[] t2 = nextLine[7].split(" ");
-                    fileCoordinates = new Coordinates(Double.parseDouble(t2[0]), Float.parseFloat(t2[1]));
+                     fileCoordinates = new Coordinates(Double.parseDouble(t2[0]), Float.parseFloat(t2[1]));
                 } catch (NumberFormatException e) {
-                    System.out.println("Value must contain numbers! Check file!");
-                    System.exit(1);
+                    ok = false;
+                }
+                if(ok) {
+                    Organization organizationFile = new Organization(fileId, fileName, fileAnnnualTurnover, fileCreationDate, fileFullName, fileType,
+                            fileAddress, fileCoordinates);
+                    organizations.addFirst(organizationFile);
+                    goodElements++;
+                }
+                else {
+                    badElements ++;
                 }
 
-                Organization organizationFile = new Organization(fileId, fileName, fileAnnnualTurnover, fileCreationDate, fileFullName, fileType,
-                        fileAddress, fileCoordinates);
-                organizations.addFirst(organizationFile);
-
             }
+            System.out.println("Collection was loaded succesfully! " +"\n" +
+                    "Number of correct elements: " + goodElements);
+            System.out.println("Number of corrupted elements: " + badElements);
         } catch (IOException | CsvValidationException e) {
             System.out.println("Syntax error! Try again!");
         }
+
     }
 
 
-    public void setOrganizations(LinkedList<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
-    public LinkedList<Organization> getOrganizations() {
-        return organizations;
-    }
 
     /**method that checks file and path to it*/
     public void checkFile(String pathToFile) throws IOException {
@@ -198,20 +197,20 @@ public class ConsoleManager {
         consoleInfo.put("filter_greater_than_annual_turnover {annualTurnover}", " Print elements which value annualTurnover field is bigger than given");
         consoleInfo.put("print_unique_official_address", " Print unique values of officialAddress fields from all collection's elements");
     }
-    /** help, show available commands" */
-    public void help () {
-        for (Map.Entry<String, String> entry : consoleInfo.entrySet()) {
-            System.out.println(entry.getKey() + entry.getValue());
+        /** help, show available commands" */
+        public void help () {
+            for (Map.Entry<String, String> entry : consoleInfo.entrySet()) {
+                System.out.println(entry.getKey() + entry.getValue());
+            }
         }
-    }
 
 
-    /**info, print collection's info to standard output*/
-    public void info () {
-        System.out.println("Type of collection: java.util.LinkedList");
-        System.out.println("Initialization date: " +dateInitial);
-        System.out.println("Amount of elements in the collection: " + organizations.size());
-    }
+        /**info, print collection's info to standard output*/
+        public void info () {
+            System.out.println("Type of collection: java.util.LinkedList");
+            System.out.println("Initialization date: " +dateInitial);
+            System.out.println("Amount of elements in the collection: " + organizations.size());
+        }
 
 
     /**method that gets ID of collection's element
@@ -487,73 +486,75 @@ public class ConsoleManager {
 
 
     /** add {element}, adding a new element to collection using all maker-methods */
-    public void add () {
-        Organization newOrg = new Organization(makerID(), makerName(), makerAnnualTurnover(), makerDate().toString(),
-                makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
-        organizations.add(newOrg);
+        public void add () {
+            Organization newOrg = new Organization(makerID(), makerName(), makerAnnualTurnover(), makerDate().toString(),
+                    makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
+            organizations.add(newOrg);
 
-    }
-
-
-    /** update id {element}, method that updates element by it's ID */
-    public void update_id (String id) {
-        try {
-            ListIterator<Organization> iterator = organizations.listIterator();
-            boolean check = false;
-            while (iterator.hasNext()) {
-                Organization s = iterator.next();
-                int intID = s.getId();
-                String stringID = String.valueOf(intID);
-                if (stringID.equals(id)) {
-                    check = true;
-                    iterator.remove();
-                    Organization organizationUpdated = new Organization(intID, makerName(), makerAnnualTurnover(), makerDate().toString(),
-                            makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
-                    iterator.add(organizationUpdated);
-                    System.out.println("Element was updated!");
-                }
-            }
-            if (!check) {
-                System.out.println("Element with this ID is not found. Try again!");
-            }
-        } catch (NumberFormatException numberFormatException) {
-            System.out.println("An argument must be a number! Try again!");
         }
-    }
 
-    /** remove_by_id, method that removes element by it's id */
-    public void remove_by_id (String id) {
-        try {
-            ListIterator<Organization> iterator = organizations.listIterator();
-            boolean check = false;
-            while (iterator.hasNext()) {
-                Organization s = iterator.next();
-                int intID = s.getId();
-                String stringID = String.valueOf(intID);
-                if (stringID.equals(id)) {
-                    iterator.remove();
-                    System.out.println("Element was removed!");
-                    check = true;
+
+        /** update id {element}, method that updates element by it's ID */
+        public void update_id (String id) {
+            try {
+                id = id.trim().replaceAll("[ ]{2,}", " ");
+                ListIterator<Organization> iterator = organizations.listIterator();
+                boolean check = false;
+                while (iterator.hasNext()) {
+                    Organization s = iterator.next();
+                    int intID = s.getId();
+                    String stringID = String.valueOf(intID);
+                    if (stringID.equals(id)) {
+                        check = true;
+                        iterator.remove();
+                        Organization organizationUpdated = new Organization(intID, makerName(), makerAnnualTurnover(), makerDate().toString(),
+                                makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
+                        iterator.add(organizationUpdated);
+                        System.out.println("Element was updated!");
+                    }
                 }
+                if (!check) {
+                    System.out.println("Element with this ID is not found. Try again!");
+                }
+            } catch (NumberFormatException numberFormatException) {
+                System.out.println("An argument must be a number! Try again!");
             }
-            if (!check) {
-                System.out.println("Element with this ID is not found. Try again!");
-            }
-        } catch (NumberFormatException numberFormatException) {
-            System.out.println("An argument must be a number! Try again!");
         }
-    }
+
+        /** remove_by_id, method that removes element by it's id */
+        public void remove_by_id (String id) {
+            try {
+                id = id.trim().replaceAll("[ ]{2,}", " ");
+                ListIterator<Organization> iterator = organizations.listIterator();
+                boolean check = false;
+                while (iterator.hasNext()) {
+                    Organization s = iterator.next();
+                    int intID = s.getId();
+                    String stringID = String.valueOf(intID);
+                    if (stringID.equals(id)) {
+                        iterator.remove();
+                        System.out.println("Element was removed!");
+                        check = true;
+                    }
+                }
+                if (!check) {
+                    System.out.println("Element with this ID is not found. Try again!");
+                }
+            } catch (NumberFormatException numberFormatException) {
+                System.out.println("An argument must be a number! Try again!");
+            }
+        }
 
 
-    /** clear, method that removes all elements from collection */
-    public void clear () {
-        organizations.clear();
-        System.out.println("All elements from collection were removed!");
-    }
+        /** clear, method that removes all elements from collection */
+        public void clear () {
+            organizations.clear();
+            System.out.println("All elements from collection were removed!");
+        }
 
-    /** save, method that saves collection to CSV file */
-    public void save () {
-        try (
+        /** save, method that saves collection to CSV file */
+        public void save () {
+            try (
                 Writer writer = Files.newBufferedWriter(Paths.get(String.valueOf(collectionCsv)));
 
                 CSVWriter csvWriter = new CSVWriter(
@@ -561,206 +562,206 @@ public class ConsoleManager {
                         CSVWriter.NO_QUOTE_CHARACTER,
                         CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                         CSVWriter.DEFAULT_LINE_END)
-        ) {
-            String[] header = {"id", "name", "annualTurnover", "creationDate", "fullName",
-                    "organizationType", "officialAddress", "coordinates"};
-            csvWriter.writeNext(header);
-            for (Organization organization : organizations) {
-                csvWriter.writeNext(new String[]{String.valueOf(organization.getId()), organization.getName(),
-                        organization.getAnnualTurnover().toString(), organization.getCreationDate(), organization.getFullName(),
-                        organization.getType().toString(), organization.getOfficialAddress().toString(), organization.getCoordinates().toString()});
+                ) {
+                String[] header = {"id", "name", "annualTurnover", "creationDate", "fullName",
+                        "organizationType", "officialAddress", "coordinates"};
+                csvWriter.writeNext(header);
+                for (Organization organization : organizations) {
+                    csvWriter.writeNext(new String[]{String.valueOf(organization.getId()), organization.getName(),
+                            organization.getAnnualTurnover().toString(), organization.getCreationDate(), organization.getFullName(),
+                            organization.getType().toString(), organization.getOfficialAddress().toString(), organization.getCoordinates().toString()});
+                }
+                System.out.println("Collection was saved successfully!");
+            }catch (IOException e) {
+                System.out.println("Collection wasn't saved! Try again!");
             }
-            System.out.println("Collection was saved successfully!");
-        }catch (IOException e) {
-            System.out.println("Collection wasn't saved! Try again!");
-        }
-    }
+            }
 
     /** add_if_min {element}, Method that adds a new element to the collection
      *if it's annual turnover is less than the smallest collection's turnover
      */
-    public void add_if_min (Organization org){
-        long minAnnualTurnover = Long.MAX_VALUE;
-        for (Organization organization : organizations) {
-            minAnnualTurnover = organization.getAnnualTurnover();
-        }
-        if (org.getAnnualTurnover() < minAnnualTurnover) {
-            organizations.add(org);
-            System.out.println("The minimal element was added.");
-        } else {
-            System.out.println("The element's annual turnover is bigger than the collection's minimal element " +
-                    "element was not added. Try another value!");
-        }
-    }
-
-    /** remove_greater {element}, method that remove collection's elements
-     if it's annual turnover is more than entered value
-     */
-    public void remove_greater (long turnover){
-        int count = 0;
-        boolean check = false;
-        ListIterator<Organization> iterator = organizations.listIterator();
-        while (iterator.hasNext()) {
-            Organization s = iterator.next();
-            if (s.getAnnualTurnover() > turnover) {
-                count += 1;
-                check = true;
-                iterator.remove();
+        public void add_if_min (Organization org){
+            long minAnnualTurnover = Long.MAX_VALUE;
+            for (Organization organization : organizations) {
+                minAnnualTurnover = organization.getAnnualTurnover();
+            }
+            if (org.getAnnualTurnover() < minAnnualTurnover) {
+                organizations.add(org);
+                System.out.println("The minimal element was added.");
+            } else {
+                System.out.println("The element's annual turnover is bigger than the collection's minimal element " +
+                        "element was not added. Try another value!");
             }
         }
 
-        System.out.println(count + " elements were removed!");
-        if (!check){
-            System.out.println("There are no elements which are greater entered value.");
+        /** remove_greater {element}, method that remove collection's elements
+        if it's annual turnover is more than entered value
+         */
+        public void remove_greater (long turnover){
+            int count = 0;
+            boolean check = false;
+            ListIterator<Organization> iterator = organizations.listIterator();
+            while (iterator.hasNext()) {
+                    Organization s = iterator.next();
+                    if (s.getAnnualTurnover() > turnover) {
+                        count += 1;
+                        check = true;
+                        iterator.remove();
+                    }
+            }
+
+            System.out.println(count + " elements were removed!");
+            if (!check){
+                System.out.println("There are no elements which are greater entered value.");
+            }
+
         }
 
-    }
-
-    /** remove_first, method that removes first element of collection */
-    public void remove_first () {
-        organizations.remove();
-        if (organizations == null) {
-            System.out.println("The collection is empty!");
-        } else {
-            System.out.println("The first element was removed!");
-        }
-    }
-
-    /** count_by_full_name, method that prints number of elements which full name is equal to entered */
-    public void count_by_full_name (String fullName){
-        int count = 0;
-        for (Organization organization : organizations) {
-            if (organization.getFullName().equals(fullName)) {
-                count += 1;
+        /** remove_first, method that removes first element of collection */
+        public void remove_first () {
+            organizations.remove();
+            if (organizations == null) {
+                System.out.println("The collection is empty!");
+            } else {
+                System.out.println("The first element was removed!");
             }
         }
-        System.out.println(count + " elements equal to entered value!");
-    }
 
-    /** filter_greater_than_annual_turnover,
-     * method that prints elements which are greater than entered value
-     */
-    public void filter_greater_than_annual_turnover ( long annualTurnover){
-        int count = 0;
-        System.out.println("Elements which annual turnover is greater than entered value: ");
-        for (Organization organization : organizations) {
-            if (organization.getAnnualTurnover() > annualTurnover) {
-                System.out.println(organization);
-                count += 1;
-            }
-        }
-        System.out.println(count + " elements were printed!");
-    }
-
-    /** print_unique_official_address, method that prints all collection's unique officialAddress values */
-    public void print_unique_official_address () {
-        int count = 0;
-        HashSet<Organization> organizationTreeSet = new HashSet(organizations);
-        System.out.println("Unique values of organization's official address: ");
-        for (Organization organization : organizationTreeSet) {
-            System.out.println(organization);
-            count += 1;
-        }
-        System.out.println(count + " unique elements were printed!");
-    }
-
-
-    /** exit, method that finishes the program */
-    public void exit () {
-        System.out.println("Thank you for using my program! The program will be finished now!");
-        System.exit(0);
-    }
-
-    /** execute_script file_name, method that read and execute script from needed file */
-    public void execute_script (String filepath){
-        try{
-            System.out.println("Recursion warning! To avoid it your file can't contain execute_script command!");
-            BufferedReader reader = new BufferedReader(new FileReader(new File(filepath)));
-            String[] commandUser;
-            String command;
-            while ((command = reader.readLine()) != null){
-                commandUser = command.trim().toLowerCase().split(" ", 2);
-                switch (commandUser[0]){
-                    case "":
-                        break;
-                    case "help":
-                        help();
-                        break;
-                    case "info":
-                        info();
-                        break;
-                    case "show":
-                        show();
-                        break;
-                    case "add":
-                        add();
-                        break;
-                    case "update id":
-                        update_id(commandUser[1]);
-                        break;
-                    case "remove_by_id":
-                        remove_by_id(commandUser[1]);
-                        break;
-                    case "clear":
-                        clear();
-                        break;
-                    case "save":
-                        save();
-                        break;
-                    case "exit":
-                        exit();
-                        break;
-                    case "remove_first":
-                        remove_first();
-                        break;
-                    case "add_if_min":
-                        System.out.println("Enter an element, which will be compared with other elements in collection.");
-                        add_if_min(new Organization(makerID(), makerName(),
-                                makerAnnualTurnover(), makerDate().toString(),
-                                makerFullName(), makerOrganizationType(),
-                                makerAddress(), makerCoordinates()));
-                        break;
-                    case "remove_greater":
-                        System.out.println("Enter an element, which will be compared with other elements in collection.");
-                        remove_greater(makerAnnualTurnover());
-                        break;
-                    case "execute_script":
-                        System.out.println("Using execute_script is prohibited!");
-                        break;
-                    case "count_by_full_name":
-                        System.out.println("Enter organization's full name, which will be compared with element`s full name.");
-                        count_by_full_name(makerFullName());
-                        break;
-                    case  "filter_greater_than_annual_turnover":
-                        System.out.println("Enter organization's annual turnover, which will be compared with element's annual turnover");
-                        filter_greater_than_annual_turnover(makerAnnualTurnover());
-                        break;
-                    case "print_unique_official_address":
-                        print_unique_official_address();
-                        break;
-                    default:
-                        reader.readLine();
-                        break;
+        /** count_by_full_name, method that prints number of elements which full name is equal to entered */
+        public void count_by_full_name (String fullName){
+            int count = 0;
+            for (Organization organization : organizations) {
+                if (organization.getFullName().equals(fullName)) {
+                    count += 1;
                 }
-                System.out.println("The end of the command");
             }
-            System.out.println("The end of the commands");
-            reader.close();
-        } catch (FileNotFoundException fileNotFoundException) {
-            System.out.println("File not found. Try again.");
-        } catch (IOException ioException) {
-            System.out.println("File reading exception. Try again.");
+            System.out.println(count + " elements equal to entered value!");
         }
+
+        /** filter_greater_than_annual_turnover,
+         * method that prints elements which are greater than entered value
+         */
+        public void filter_greater_than_annual_turnover ( long annualTurnover){
+            int count = 0;
+            System.out.println("Elements which annual turnover is greater than entered value: ");
+            for (Organization organization : organizations) {
+                if (organization.getAnnualTurnover() > annualTurnover) {
+                    System.out.println(organization);
+                    count += 1;
+                }
+            }
+            System.out.println(count + " elements were printed!");
+        }
+
+        /** print_unique_official_address, method that prints all collection's unique officialAddress values */
+        public void print_unique_official_address () {
+            int count = 0;
+            HashSet<Organization> organizationTreeSet = new HashSet(organizations);
+            System.out.println("Unique values of organization's official address: ");
+            for (Organization organization : organizationTreeSet) {
+                        System.out.println(organization);
+                        count += 1;
+                    }
+                System.out.println(count + " unique elements were printed!");
+            }
+
+
+        /** exit, method that finishes the program */
+        public void exit () {
+            System.out.println("Thank you for using my program! The program will be finished now!");
+            System.exit(0);
+        }
+
+        /** execute_script file_name, method that read and execute script from needed file */
+        public void execute_script (String filepath){
+            try{
+                System.out.println("Recursion warning! To avoid it your file can't contain execute_script command!");
+                BufferedReader reader = new BufferedReader(new FileReader(new File(filepath)));
+                String[] commandUser;
+                String command;
+                while ((command = reader.readLine()) != null){
+                    commandUser = command.trim().toLowerCase().split(" ", 2);
+                    switch (commandUser[0]){
+                        case "":
+                            break;
+                        case "help":
+                           help();
+                            break;
+                        case "info":
+                            info();
+                            break;
+                        case "show":
+                            show();
+                            break;
+                        case "add":
+                            add();
+                            break;
+                        case "update id":
+                            update_id(commandUser[1]);
+                            break;
+                        case "remove_by_id":
+                            remove_by_id(commandUser[1]);
+                            break;
+                        case "clear":
+                            clear();
+                            break;
+                        case "save":
+                            save();
+                            break;
+                        case "exit":
+                            exit();
+                            break;
+                        case "remove_first":
+                            remove_first();
+                            break;
+                        case "add_if_min":
+                            System.out.println("Enter an element, which will be compared with other elements in collection.");
+                            add_if_min(new Organization(makerID(), makerName(),
+                                    makerAnnualTurnover(), makerDate().toString(),
+                                    makerFullName(), makerOrganizationType(),
+                                    makerAddress(), makerCoordinates()));
+                            break;
+                        case "remove_greater":
+                            System.out.println("Enter an element, which will be compared with other elements in collection.");
+                            remove_greater(makerAnnualTurnover());
+                            break;
+                        case "execute_script":
+                            System.out.println("Using execute_script is prohibited!");
+                            break;
+                        case "count_by_full_name":
+                            System.out.println("Enter organization's full name, which will be compared with element`s full name.");
+                            count_by_full_name(makerFullName());
+                            break;
+                        case  "filter_greater_than_annual_turnover":
+                            System.out.println("Enter organization's annual turnover, which will be compared with element's annual turnover");
+                            filter_greater_than_annual_turnover(makerAnnualTurnover());
+                            break;
+                        case "print_unique_official_address":
+                            print_unique_official_address();
+                            break;
+                        default:
+                            reader.readLine();
+                            break;
+                    }
+                    System.out.println("The end of the command");
+                }
+                System.out.println("The end of the commands");
+                reader.close();
+            } catch (FileNotFoundException fileNotFoundException) {
+                System.out.println("File not found. Try again.");
+            } catch (IOException ioException) {
+                System.out.println("File reading exception. Try again.");
+            }
+            }
+
+
+        /** method that prints current date in string representation */
+        public Date makerDate() {
+            this.modificationDate = new Date();
+            return modificationDate;
+
+        }
+
+
     }
-
-
-    /** method that prints current date in string representation */
-    public Date makerDate() {
-        this.modificationDate = new Date();
-        return modificationDate;
-
-    }
-
-
-}
 
