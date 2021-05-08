@@ -675,6 +675,7 @@ public class ConsoleManager {
         /** execute_script file_name, method that read and execute script from needed file */
         public void execute_script (String filepath){
             try{
+                filepath = filepath.trim().replaceAll("[ ]{2,}", " ");
                 System.out.println("Recursion warning! To avoid it your file can't contain execute_script command!");
                 BufferedReader reader = new BufferedReader(new FileReader(new File(filepath)));
                 String[] commandUser;
