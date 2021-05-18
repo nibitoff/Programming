@@ -1,5 +1,8 @@
 package data;
-import java.util.Date;
+import managers.DataChecker;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * @author Sabitov Danil
@@ -18,7 +21,7 @@ public class Organization {
     private Coordinates coordinates; //Поле не может быть null
 
     // constructor for organization
-    public Organization(int id, String name, Long annualTurnover, String creationDate,  String fullName, OrganizationType type, Address officialAddress, Coordinates coordinates) {
+    public Organization(int id, String name, Long annualTurnover, String creationDate, String fullName, OrganizationType type, Address officialAddress, Coordinates coordinates) {
         this.id = id;
         this.name = name;
         this.annualTurnover = annualTurnover;
@@ -33,7 +36,7 @@ public class Organization {
 
 
     /** method that print Organization in a string representation */
-   @Override
+    @Override
     public String toString() {
         return "Organization{" +
                 "id = " + id +
@@ -79,10 +82,6 @@ public class Organization {
         this.fullName = fullName;
     }
 
-    public String makerCreationDate(){
-            this.creationDate = String.valueOf(new Date());
-            return creationDate;
-        }
 
     public OrganizationType getType() {
         return type;
@@ -108,8 +107,10 @@ public class Organization {
         this.coordinates = coordinates;
     }
 
-    public String getCreationDate() {
-        return creationDate;
+    public String getDate(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return formatter.format(calendar.getTime());
     }
 }
 
