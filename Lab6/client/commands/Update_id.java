@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import data.*;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -268,20 +269,13 @@ public class Update_id{
     }
 
 
-    public static void update(String orgId) throws JsonProcessingException, InterruptedException {
+    public void update(String orgId) throws  InterruptedException {
         int id = Integer.parseInt(orgId);
     Organization newOrg = new Organization(id, makerName(), makerAnnualTurnover(), "0",
             makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
-    Sender sender = new Sender();
+        ClientTCP sender = new ClientTCP();
         sender.setOrg(newOrg);
         sender.setCommand("update_id");
-
-
-    ObjectMapper mapper = new ObjectMapper();
-    //Converting the Object to JSONString
-    String jsonString = mapper.writeValueAsString(sender);
-    String toServer = jsonString.replaceAll("[\\\t|\\\n|\\\r]"," ");
-        System.out.println(toServer);
         sender.sending(sender);
 
 }
