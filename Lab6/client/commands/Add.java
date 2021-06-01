@@ -1,14 +1,15 @@
 package commands;
 
-import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import data.*;
+
+import static data.OrganizationType.TRUST;
 
 
 public class Add {
@@ -16,7 +17,7 @@ public class Add {
     /**method that gets name of collection's element
      * @return String name
      */
-    public static String makerName() {
+    public  String makerName() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -39,7 +40,7 @@ public class Add {
     /**method that gets X-coordinate of organization
      * @return Double x
      */
-    public static double makerX() {
+    public  double makerX() {
         while (true) {
             try {
                 System.out.println("Enter X coordinate. Value cannot be empty.");
@@ -63,7 +64,7 @@ public class Add {
     /**method that gets Y-coordinate of organization
      * @return Float y
      */
-    public static float makerY() {
+    public  float makerY() {
         while (true) {
             try {
                 System.out.println("Enter Y coordinate. Value cannot be empty.");
@@ -85,14 +86,14 @@ public class Add {
     }
 
     /**method that makes coordinates from method makerX and makerY*/
-    public static Coordinates makerCoordinates() {
+    public  Coordinates makerCoordinates() {
         return new Coordinates(makerX(), makerY());
     }
 
     /**method that gets organization's annual turnover
      * @return Long annualTurnover
      */
-    public static long makerAnnualTurnover() {
+    public long makerAnnualTurnover() {
         while (true) {
             try {
                 System.out.println("Enter organization's annual turnover. Value must be greater than 0.");
@@ -116,7 +117,7 @@ public class Add {
     /** method that gets organization's full name
      * @return String fullName
      */
-    public static String makerFullName() {
+    public String makerFullName() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -135,7 +136,7 @@ public class Add {
     /** method that gets organization's type
      * @return OrganizationType type
      */
-    public static OrganizationType makerOrganizationType() {
+    public OrganizationType makerOrganizationType() {
         while (true) {
             try {
                 System.out.println("Choose type of organization. Enter the number which respond for desired type.");
@@ -144,7 +145,7 @@ public class Add {
                 int type = scanner.nextInt();
                 switch (type) {
                     case 1:
-                        return OrganizationType.TRUST;
+                        return TRUST;
                     case 2:
                         return OrganizationType.PRIVATE_LIMITED_COMPANY;
                     case 3:
@@ -164,7 +165,7 @@ public class Add {
     /** method that gets address of organization(street)
      * @return String street
      * */
-    public static String makerAddressStreet() {
+    public String makerAddressStreet() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -191,7 +192,7 @@ public class Add {
     /** method that gets organization's town X-coordinate
      * @return x
      */
-    public static int makertownX() {
+    public int makertownX() {
         while (true) {
             try {
                 System.out.println("Enter town's X coordinate. Value cannot be empty.");
@@ -215,7 +216,7 @@ public class Add {
     /** method that gets organization's town Y-coordinate
      * @return y
      */
-    public static long makertownY() {
+    public long makertownY() {
         while (true) {
             try {
                 System.out.println("Enter town's Y coordinate. Value cannot be empty.");
@@ -239,7 +240,7 @@ public class Add {
     /** method that gets address of organization(name of town)
      * @return town
      */
-    public static String makerTownName() {
+    public String makerTownName() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -262,30 +263,48 @@ public class Add {
     /** method that makes organization's town name and coordinates
      *from methods makertownX, makertownY,makerTownName
      */
-    public static Location makerLocation() {
+    public Location makerLocation() {
         return new Location(makertownX(), makertownY(), makerTownName());
     }
 
     /** method that makes official organization's address from methods makerAddressStreet and makerLocation */
-    public static Address makerAddress() {
+    public  Address makerAddress() {
         return new Address(makerAddressStreet(), makerLocation());
     }
 
 
+    /** method that prints current date in string representation
+     * @return modificationDate*/
+    /*
+    public static String getDate(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return formatter.format(calendar.getTime());
+    }
+
+
+     */
     /** add {element}, adding a new element to collection using all maker-methods */
-    public static void add () throws JsonProcessingException, InterruptedException {
-        Organization newOrg = new Organization(0, makerName(), makerAnnualTurnover(), "0",
-                makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
-        Sender sender = new Sender();
+    public void add () throws  InterruptedException {
+        boolean hand = false;
+        Organization newOrg;
+        if(hand){
+             newOrg = new Organization(0, makerName(), makerAnnualTurnover(), "0",
+                    makerFullName(), makerOrganizationType(), makerAddress(), makerCoordinates());
+        }
+        else {
+            long age = 19;
+            Location location = new Location(12, 22, "Kazan");
+            Address address = new Address("Zinina", location);
+            Coordinates coordinates = new Coordinates(12, 33);
+             newOrg = new Organization(0, "dan", age, "",
+                    "danil", TRUST, address, coordinates);
+
+
+        }
+        ClientTCP sender = new ClientTCP();
         sender.setOrg(newOrg);
         sender.setCommand("add");
-
-
-        ObjectMapper mapper = new ObjectMapper();
-        //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(sender);
-        String toServer = jsonString.replaceAll("[\\\t|\\\n|\\\r]"," ");
-        //System.out.println(toServer);
         sender.sending(sender);
 
     }
