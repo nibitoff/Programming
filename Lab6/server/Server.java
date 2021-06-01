@@ -11,33 +11,20 @@ public class Server {
     public static String myResult;
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        class Sender {
-            private String command;
-            private Organization org;
+        try {
+            System.out.println("Program started working!");
+            CommandManager commandManager = new CommandManager(new CollectionChecker(args[0]));
+            System.out.println("Server started!");
 
-            public Sender(String command, Organization organization) {
-                this.command = command;
-                this.org = organization;
+                Reciever reciever = new Reciever();
+                reciever.run();
+
+            }catch (IOException e){
+                System.out.println("Can't connect to client! The server will shutdown!");
+            } catch (ArrayIndexOutOfBoundsException | ClassNotFoundException exception) {
+                System.out.println("Incorrect filepath was entered! Try again!");
+                System.exit(1);
             }
 
-            public String getCommand() {
-                return command;
-            }
-
-            public void setCommand(String command) {
-                this.command = command;
-            }
-
-            public Organization getOrg() {
-                return org;
-            }
-
-            public void setOrg(Organization org) {
-                this.org = org;
-            }
-        }
-        System.out.println("Server started!");
-        Reciever reciever = new Reciever();
-        reciever.recieve();
     }
 }
