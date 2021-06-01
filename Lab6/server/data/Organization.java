@@ -10,7 +10,7 @@ import java.util.Date;
  */
 
 public class Organization {
-    private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private Integer id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Long annualTurnover; //Поле может быть null, Значение поля должно быть больше 0
     private String creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
@@ -20,7 +20,7 @@ public class Organization {
     private Coordinates coordinates; //Поле не может быть null
 
     // constructor for organization
-    public Organization(int id, String name, Long annualTurnover, String creationDate,  String fullName, OrganizationType type, Address officialAddress, Coordinates coordinates) {
+    public Organization(Integer id, String name, Long annualTurnover, String creationDate,  String fullName, OrganizationType type, Address officialAddress, Coordinates coordinates) {
         this.id = id;
         this.name = name;
         this.annualTurnover = annualTurnover;
@@ -32,7 +32,6 @@ public class Organization {
     }
 
     public Organization(){}
-
 
 
 
@@ -51,7 +50,7 @@ public class Organization {
                 '}';
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
