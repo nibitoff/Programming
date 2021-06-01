@@ -1,57 +1,82 @@
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import data.Organization;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.ServerSocket;
-import java.util.LinkedList;
-import java.util.Map;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
 
 
 public class Reciever {
-    public void recieve() throws IOException, InterruptedException {
-         Sender s = new Sender();
-        try (ServerSocket server = new ServerSocket(3345)) {
-            System.out.println("Successful connection!");
-            Socket client = server.accept();
-            DataInputStream in = new DataInputStream(client.getInputStream());
-            DataOutputStream out = new DataOutputStream(client.getOutputStream());
-            ConsoleManager consoleManager = new ConsoleManager(s);
+    Sender s;
+    Selector selector;
+    ServerSocketChannel crunchifySocket;
+    InetSocketAddress crunchifyAddr;
 
-            while (!client.isClosed()) {
-                String entry = in.readUTF();
-                ObjectMapper mapper = new ObjectMapper();
-                 s = mapper.readValue(entry, Sender.class);
-                System.out.println(s.getCommand());
-                switch (s.getCommand()){
-                    case "show":
+    public void run() throws IOException, InterruptedException, ClassNotFoundException {
+             selector = Selector.open(); // selector is open here
+             crunchifySocket = ServerSocketChannel.open();
+             crunchifyAddr = new InetSocketAddress("localhost", 3345);
+             crunchifySocket.bind(crunchifyAddr);
+             crunchifySocket.configureBlocking(false);
 
-                        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-                        String json = ow.writeValueAsString(consoleManager.show());
-                        String toClient = json.replaceAll("[\\\t|\\\n|\\\r]"," ");
-                        System.out.println(toClient);
-                        out.writeUTF(toClient);
-                        out.flush();
-                        break;
-                    default:
-                         consoleManager = new ConsoleManager(s);
-                        break;
+
+            int ops = crunchifySocket.validOps();
+            SelectionKey selectKy = crunchifySocket.register(selector, ops, null);
+            System.out.println("CHECK");
+            while (true){
+                selector.select();
+                Set<SelectionKey> crunchifyKeys = selector.selectedKeys();
+                Iterator<SelectionKey> crunchifyIterator = crunchifyKeys.iterator();
+                while (crunchifyIterator.hasNext()) {
+                    SelectionKey myKey = crunchifyIterator.next();
+                if (myKey.isAcceptable()) {
+                    SocketChannel crunchifyClient = crunchifySocket.accept();
+                    crunchifyClient.configureBlocking(false);
+                    crunchifyClient.register(selector, SelectionKey.OP_READ);
+                }else if (myKey.isReadable()) {
+                    SocketChannel crunchifyClient = (SocketChannel) myKey.channel();
+                    ByteBuffer crunchifyBuffer = ByteBuffer.allocate(2048);
+                    crunchifyClient.read(crunchifyBuffer);
+                    String result = new String(crunchifyBuffer.array()).trim();
+                    try {
+                        s = new Sender();
+                        ObjectMapper mapper = new ObjectMapper();
+                        s = mapper.readerForUpdating(s).readValue(result);
+
+                        if (s.getCommand().equals("exit")) {
+                            crunchifyClient.close();
+                            System.out.println("Client has broken the connection");
+                        }
+                        ConsoleManager consoleManager = new ConsoleManager();
+
+                        CommandManager commandManager = new CommandManager(consoleManager);
+                        String toClient = commandManager.cmdMode(s);
+
+
+                        System.out.println("Что-то там отправляет = " + "\n" + toClient);
+                        byte[] message = toClient.getBytes();
+                        ByteBuffer buffer = ByteBuffer.wrap(message);
+                        crunchifyClient.write(buffer);
+                        System.out.println("Sent!!!!!!!!!");
+                        //Thread.sleep(2000);
+                    } catch (NullPointerException exception) {
+                        System.out.println("Incorrect command");
+                    }
+
                 }
-                 consoleManager = new ConsoleManager(s);
-
+                crunchifyIterator.remove();
+                }
             }
-            in.close();
-            client.close();
-        } catch (IOException e) {
-            System.out.println("Ошибка чего-то!");
+
         }
-
-
     }
-}
+
