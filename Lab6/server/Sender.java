@@ -36,7 +36,5 @@ public class Sender {
         this.org = org;
     }
 
-
-
 }
 
