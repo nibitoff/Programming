@@ -75,7 +75,7 @@ public class  CommandManager {
                         consoleManager.save();
                         break;
                     case "execute_script":
-                        consoleManager.execute_script(commandUser[1]);
+                        result = consoleManager.execute_script(sender.getFilePath());
                         consoleManager.save();
                         break;
                     case "exit":
@@ -104,8 +104,7 @@ public class  CommandManager {
                         consoleManager.save();
                         break;
                     case "filter_greater_than_annual_turnover":
-                        System.out.println("Enter organization's annual turnover, which will be compared with element's annual turnover");
-                        consoleManager.filter_greater_than_annual_turnover(consoleManager.makerAnnualTurnover());
+                        result = consoleManager.filter_greater_than_annual_turnover(sender.getOrg());
                         consoleManager.save();
                         break;
                     case "print_unique_official_address":
