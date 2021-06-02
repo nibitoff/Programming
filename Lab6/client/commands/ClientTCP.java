@@ -19,11 +19,19 @@ import helpers.CommandManager;
 public class ClientTCP {
     private String command;
     private Organization org;
+    private String filePath;
 
     private String toServer;
     private InetSocketAddress socket;
     private SocketChannel client;
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public String getCommand() {
         return command;
@@ -43,7 +51,6 @@ public class ClientTCP {
 
 
     public void sending(ClientTCP sender)  throws InterruptedException {
-       // System.out.println("Socket connected = " + client.isConnected());
             try {
                  socket = new InetSocketAddress("localhost", 3345);
                  client = SocketChannel.open(socket);
