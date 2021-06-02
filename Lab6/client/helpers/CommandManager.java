@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import commands.*;
 import data.Organization;
 
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author Sabitov Danil
@@ -36,6 +35,17 @@ public class  CommandManager {
                     System.out.println("Enter a command: ");
                     command = cmdreader.nextLine();
                     commandUser = command.trim().toLowerCase().split(" ", 2);
+                    List<String> specialCommands =
+                            new ArrayList<String>(Arrays.asList(new String[]{"execute_script" , "count_by_full_name"}));
+                    if (!specialCommands.contains(commandUser[0]) && commandUser.length > 1){
+                        int t1 = -1;
+                        try {
+                            t1 = Integer.parseInt(commandUser[1]);
+                        }catch (Exception e){
+                            System.out.println("Error the argument must be an Integer!");
+                            continue;
+                        }
+                    }
                     try {
                         System.out.println(commandUser[0]);
                         switch (commandUser[0]) {
@@ -70,10 +80,11 @@ public class  CommandManager {
                                 clear.clear();
                                 break;
                             case "execute_script":
-
+                                Execute_script execute_script = new Execute_script();
+                                execute_script.execute_script(commandUser[1]);
                                 break;
                             case "exit":
-                                System.out.println("Thanks for using my programm!");
+                                System.out.println("Thanks for using my program!");
                                 System.exit(1);
                                 break;
                             case "remove_first":
@@ -93,8 +104,8 @@ public class  CommandManager {
 
                                 break;
                             case "filter_greater_than_annual_turnover":
-                                System.out.println("Enter organization's annual turnover, which will be compared with element's annual turnover");
-
+                                Filter_greater_than_annual_turnover filter_turnover = new Filter_greater_than_annual_turnover();
+                                filter_turnover.filter_annual_turnover(commandUser[1]);
                                 break;
                             case "print_unique_official_address":
                                 Print_unique_official_address print_unique_official_address = new Print_unique_official_address();
