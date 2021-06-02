@@ -18,19 +18,19 @@ import java.util.Set;
 public class Reciever {
     Sender s;
     Selector selector;
-    ServerSocketChannel crunchifySocket;
-    InetSocketAddress crunchifyAddr;
+    ServerSocketChannel socket;
+    InetSocketAddress inetAddress;
 
     public void run() throws IOException, InterruptedException, ClassNotFoundException {
              selector = Selector.open(); // selector is open here
-             crunchifySocket = ServerSocketChannel.open();
-             crunchifyAddr = new InetSocketAddress("localhost", 3345);
-             crunchifySocket.bind(crunchifyAddr);
-             crunchifySocket.configureBlocking(false);
+             socket = ServerSocketChannel.open();
+             inetAddress = new InetSocketAddress("localhost", 3345);
+             socket.bind(inetAddress);
+             socket.configureBlocking(false);
 
 
-            int ops = crunchifySocket.validOps();
-            SelectionKey selectKy = crunchifySocket.register(selector, ops, null);
+            int ops = socket.validOps();
+            SelectionKey selectKy = socket.register(selector, ops, null);
             System.out.println("CHECK");
             while (true){
                 selector.select();
@@ -39,7 +39,7 @@ public class Reciever {
                 while (crunchifyIterator.hasNext()) {
                     SelectionKey myKey = crunchifyIterator.next();
                 if (myKey.isAcceptable()) {
-                    SocketChannel crunchifyClient = crunchifySocket.accept();
+                    SocketChannel crunchifyClient = socket.accept();
                     crunchifyClient.configureBlocking(false);
                     crunchifyClient.register(selector, SelectionKey.OP_READ);
                 }else if (myKey.isReadable()) {
