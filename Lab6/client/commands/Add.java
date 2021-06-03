@@ -8,7 +8,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import data.*;
-
+/**
+ * Class for command "add"
+ * @author Sabitov Danil
+ * @version 1.0
+ */
 import static data.OrganizationType.TRUST;
 
 
@@ -286,7 +290,7 @@ public class Add {
      */
     /** add {element}, adding a new element to collection using all maker-methods */
     public void add () throws  InterruptedException {
-        boolean hand = false;
+        boolean hand = true;
         Organization newOrg;
         if(hand){
              newOrg = new Organization(0, makerName(), makerAnnualTurnover(), "0",
@@ -299,7 +303,6 @@ public class Add {
             Coordinates coordinates = new Coordinates(12, 33);
              newOrg = new Organization(0, "dan", age, "",
                     "danil", TRUST, address, coordinates);
-
 
         }
         ClientTCP sender = new ClientTCP();
