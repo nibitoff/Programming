@@ -86,11 +86,7 @@ public class  CommandManager {
                         consoleManager.save();
                         break;
                     case "add_if_min":
-                        System.out.println("Enter an element, which will be compared with other elements in collection.");
-                        consoleManager.add_if_min(new Organization(consoleManager.makerID(), consoleManager.makerName(),
-                                consoleManager.makerAnnualTurnover(), consoleManager.getDate().toString(),
-                                consoleManager.makerFullName(), consoleManager.makerOrganizationType(),
-                                consoleManager.makerAddress(), consoleManager.makerCoordinates()));
+                        result = consoleManager.add_if_min(sender.getOrg());
                         consoleManager.save();
                         break;
 
@@ -99,8 +95,7 @@ public class  CommandManager {
                         consoleManager.save();
                         break;
                     case "count_by_full_name":
-                        System.out.println("Enter organization's full name, which will be compared with element`s full name.");
-                        consoleManager.count_by_full_name(consoleManager.makerFullName());
+                        result = consoleManager.count_by_full_name(sender.getOrg());
                         consoleManager.save();
                         break;
                     case "filter_greater_than_annual_turnover":
