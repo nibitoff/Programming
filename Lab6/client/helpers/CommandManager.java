@@ -92,16 +92,16 @@ public class  CommandManager {
                                 remove_first.remove_first();
                                 break;
                             case "add_if_min":
-                                System.out.println("Enter an element, which will be compared with other elements in collection.");
-
+                                Add_if_min add_if_min =new Add_if_min();
+                                add_if_min.add_min(commandUser[1]);
                                 break;
                             case "remove_greater":
                                 Remove_greater remove_greater = new Remove_greater();
                                 remove_greater.remove_annual(commandUser[1]);
                                 break;
                             case "count_by_full_name":
-                                System.out.println("Enter organization's full name, which will be compared with element`s full name.");
-
+                                Count_by_full_name count_by_full_name = new Count_by_full_name();
+                                count_by_full_name.count(commandUser[1]);
                                 break;
                             case "filter_greater_than_annual_turnover":
                                 Filter_greater_than_annual_turnover filter_turnover = new Filter_greater_than_annual_turnover();
