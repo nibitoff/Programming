@@ -8,12 +8,16 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-
+/**
+ * Class for command "update_id"
+ * @author Sabitov Danil
+ * @version 1.0
+ */
 public class Update_id{
     /**method that gets name of collection's element
      * @return String name
      */
-    public static String makerName() {
+    public String makerName() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -36,7 +40,7 @@ public class Update_id{
     /**method that gets X-coordinate of organization
      * @return Double x
      */
-    public static double makerX() {
+    public double makerX() {
         while (true) {
             try {
                 System.out.println("Enter X coordinate. Value cannot be empty.");
@@ -60,7 +64,7 @@ public class Update_id{
     /**method that gets Y-coordinate of organization
      * @return Float y
      */
-    public static float makerY() {
+    public float makerY() {
         while (true) {
             try {
                 System.out.println("Enter Y coordinate. Value cannot be empty.");
@@ -82,14 +86,14 @@ public class Update_id{
     }
 
     /**method that makes coordinates from method makerX and makerY*/
-    public static Coordinates makerCoordinates() {
+    public Coordinates makerCoordinates() {
         return new Coordinates(makerX(), makerY());
     }
 
     /**method that gets organization's annual turnover
      * @return Long annualTurnover
      */
-    public static long makerAnnualTurnover() {
+    public long makerAnnualTurnover() {
         while (true) {
             try {
                 System.out.println("Enter organization's annual turnover. Value must be greater than 0.");
@@ -113,7 +117,7 @@ public class Update_id{
     /** method that gets organization's full name
      * @return String fullName
      */
-    public static String makerFullName() {
+    public String makerFullName() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -132,7 +136,7 @@ public class Update_id{
     /** method that gets organization's type
      * @return OrganizationType type
      */
-    public static OrganizationType makerOrganizationType() {
+    public OrganizationType makerOrganizationType() {
         while (true) {
             try {
                 System.out.println("Choose type of organization. Enter the number which respond for desired type.");
@@ -161,7 +165,7 @@ public class Update_id{
     /** method that gets address of organization(street)
      * @return String street
      * */
-    public static String makerAddressStreet() {
+    public String makerAddressStreet() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -188,7 +192,7 @@ public class Update_id{
     /** method that gets organization's town X-coordinate
      * @return x
      */
-    public static int makertownX() {
+    public int makertownX() {
         while (true) {
             try {
                 System.out.println("Enter town's X coordinate. Value cannot be empty.");
@@ -212,7 +216,7 @@ public class Update_id{
     /** method that gets organization's town Y-coordinate
      * @return y
      */
-    public static long makertownY() {
+    public long makertownY() {
         while (true) {
             try {
                 System.out.println("Enter town's Y coordinate. Value cannot be empty.");
@@ -236,7 +240,7 @@ public class Update_id{
     /** method that gets address of organization(name of town)
      * @return town
      */
-    public static String makerTownName() {
+    public String makerTownName() {
         while (true) {
             try {
                 Scanner scanner = new Scanner(System.in);
@@ -259,16 +263,19 @@ public class Update_id{
     /** method that makes organization's town name and coordinates
      *from methods makertownX, makertownY,makerTownName
      */
-    public static Location makerLocation() {
+    public Location makerLocation() {
         return new Location(makertownX(), makertownY(), makerTownName());
     }
 
     /** method that makes official organization's address from methods makerAddressStreet and makerLocation */
-    public static Address makerAddress() {
+    public Address makerAddress() {
         return new Address(makerAddressStreet(), makerLocation());
     }
 
-
+    /**
+     * Method for realizing this command
+     *  @param orgId - string representation of organization's id
+     */
     public void update(String orgId) throws  InterruptedException {
         int id = Integer.parseInt(orgId);
     Organization newOrg = new Organization(id, makerName(), makerAnnualTurnover(), "0",
