@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class for checking file's collection
+ */
 public class CollectionChecker {
 
     /**
@@ -23,10 +28,7 @@ public class CollectionChecker {
      * Field for saving date of initialization of the collection
      */
     public static Date dateInitial;
-    /**
-     * Field for saving date of modification of the collection
-     */
-    private String modificationDate;
+
     /**
      * LinkedList collection for keeping a collection as java-object
      */
@@ -122,7 +124,6 @@ public class CollectionChecker {
         } catch (IOException e) {
             System.out.println("Syntax error! Try again!");
         }
-        System.out.println(filePath);
         this.collectionCsv = new File(filePath);
         this.dateInitial = new Date();
     }
