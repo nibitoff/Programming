@@ -22,7 +22,7 @@ public class Reciever {
     InetSocketAddress inetAddress;
 
     public void run() throws IOException, InterruptedException, ClassNotFoundException {
-             selector = Selector.open(); // selector is open here
+             selector = Selector.open();
              socket = ServerSocketChannel.open();
              inetAddress = new InetSocketAddress("localhost", 3345);
              socket.bind(inetAddress);
@@ -31,29 +31,28 @@ public class Reciever {
 
             int ops = socket.validOps();
             SelectionKey selectKy = socket.register(selector, ops, null);
-            System.out.println("CHECK");
             while (true){
                 selector.select();
-                Set<SelectionKey> crunchifyKeys = selector.selectedKeys();
-                Iterator<SelectionKey> crunchifyIterator = crunchifyKeys.iterator();
-                while (crunchifyIterator.hasNext()) {
-                    SelectionKey myKey = crunchifyIterator.next();
+                Set<SelectionKey> keys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = keys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey myKey = iterator.next();
                 if (myKey.isAcceptable()) {
-                    SocketChannel crunchifyClient = socket.accept();
-                    crunchifyClient.configureBlocking(false);
-                    crunchifyClient.register(selector, SelectionKey.OP_READ);
+                    SocketChannel client = socket.accept();
+                    client.configureBlocking(false);
+                    client.register(selector, SelectionKey.OP_READ);
                 }else if (myKey.isReadable()) {
-                    SocketChannel crunchifyClient = (SocketChannel) myKey.channel();
-                    ByteBuffer crunchifyBuffer = ByteBuffer.allocate(2048);
-                    crunchifyClient.read(crunchifyBuffer);
-                    String result = new String(crunchifyBuffer.array()).trim();
+                    SocketChannel client = (SocketChannel) myKey.channel();
+                    ByteBuffer buffer = ByteBuffer.allocate(2048);
+                    client.read(buffer);
+                    String result = new String(buffer.array()).trim();
                     try {
                         s = new Sender();
                         ObjectMapper mapper = new ObjectMapper();
                         s = mapper.readerForUpdating(s).readValue(result);
 
                         if (s.getCommand().equals("exit")) {
-                            crunchifyClient.close();
+                            client.close();
                             System.out.println("Client has broken the connection");
                         }
                         ConsoleManager consoleManager = new ConsoleManager();
@@ -62,18 +61,16 @@ public class Reciever {
                         String toClient = commandManager.cmdMode(s);
 
 
-                        System.out.println("Что-то там отправляет = " + "\n" + toClient);
+                        System.out.println("The message was sent to client!");
                         byte[] message = toClient.getBytes();
-                        ByteBuffer buffer = ByteBuffer.wrap(message);
-                        crunchifyClient.write(buffer);
-                        System.out.println("Sent!!!!!!!!!");
-                        //Thread.sleep(2000);
+                        ByteBuffer bufferToSend = ByteBuffer.wrap(message);
+                        client.write(bufferToSend);
                     } catch (NullPointerException exception) {
                         System.out.println("Incorrect command");
                     }
 
                 }
-                crunchifyIterator.remove();
+                iterator.remove();
                 }
             }
 
