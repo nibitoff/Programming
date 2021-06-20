@@ -12,6 +12,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class for describing login and register actions
+ */
 public class AuthenticationAsk {
     private Scanner scanner;
     String pattern = "(?=\\S+$).{3,}";
@@ -20,6 +25,7 @@ public class AuthenticationAsk {
         this.scanner = scanner;
     }
 
+    /** Method that asks user's login  */
     public String askLogin() {
         String login;
         while (true) {
@@ -35,6 +41,7 @@ public class AuthenticationAsk {
         return login;
     }
 
+    /** Method that asks user's password  */
     public String askPassword() {
         String password;
         while (true) {
@@ -60,6 +67,7 @@ public class AuthenticationAsk {
         return password;
     }
 
+    /** Method that asks is user registered */
     public boolean askQuestion(String question) {
         String finalQuestion = question + " (yes/no):";
         String answer;
@@ -78,6 +86,7 @@ public class AuthenticationAsk {
         }
     }
 
+    /** Method that encrypt password using SHA-384  */
     public String encryptPassword(String password) {
         try{
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-384");
