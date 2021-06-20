@@ -7,6 +7,11 @@ import java.net.UnknownHostException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class describing Sender
+ */
 public class  Sender {
     private String command;
     private Organization org;
