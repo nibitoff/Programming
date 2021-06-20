@@ -8,6 +8,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class for describing User
+ */
 public class User {
     private String login;
     private String password;
