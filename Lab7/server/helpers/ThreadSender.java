@@ -4,7 +4,11 @@ import java.nio.channels.SocketChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class describing multi-thread sending commands from client
+ */
 public class ThreadSender {
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     SocketChannel client;
