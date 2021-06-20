@@ -99,7 +99,6 @@ public class ClientTCP {
                     ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
                     String json = ow.writeValueAsString(sender);
                     toServer = json.replaceAll("[\\\t|\\\n|\\\r]", " ");
-                    System.out.println(toServer);
                     byte[] message = toServer.getBytes();
                     ByteBuffer buffer = ByteBuffer.wrap(message);
 
@@ -153,8 +152,6 @@ public class ClientTCP {
                                     break;
                             }
                         }
-                        // collectionsIDs = result.split("|")[1];
-                        //  result = result.split("|")[0];
                         System.out.println(result);
                         if (result.equals("The minimal element was found! Enter element's values.")) {
                             Add add = new Add();
@@ -176,7 +173,20 @@ public class ClientTCP {
             System.out.println("Can't connect to the server. Check connection and try again!" + "\n" +
                     "Waiting for connection!");
             Thread.sleep(5 * 1000);
-            sending(sender);
+            System.out.println("Do you want to try connecting to server 'yes'/'no'?");
+            Scanner scanner = new Scanner(System.in);
+            String answer = scanner.nextLine();
+            if (answer.equals("yes")) {
+                sending(sender);
+            }
+            else if (answer.equals("no")){
+                System.out.println("Program was stopped");
+                System.exit(1);
+            }
+            else {
+                System.out.println("The answer must be 'yes'/'no'");
+                sending(sender);
+            }
         }
     }
 
