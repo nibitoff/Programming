@@ -1,3 +1,4 @@
+/*
 package helpers;
 import java.io.Serializable;
 import java.util.Objects;
@@ -39,3 +40,5 @@ public class User{
         return login + ":" + password;
     }
 }
+
+ */
