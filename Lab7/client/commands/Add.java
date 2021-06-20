@@ -290,7 +290,7 @@ public class Add {
      */
     /** add {element}, adding a new element to collection using all maker-methods */
     public void add () throws  InterruptedException {
-        boolean hand = false;
+        boolean hand = true;
         Organization newOrg;
         if(hand){
              newOrg = new Organization(0, makerName(), makerAnnualTurnover(), "0",
