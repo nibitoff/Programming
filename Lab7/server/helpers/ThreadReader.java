@@ -8,7 +8,11 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.Callable;
 import java.util.concurrent.RecursiveTask;
-
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class describing multi-thread reading commands from client
+ */
 public class ThreadReader extends RecursiveTask<Sender> {
     SocketChannel client;
     Sender s;
