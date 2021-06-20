@@ -20,6 +20,11 @@ import java.util.Set;
 import java.util.concurrent.*;
 
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class describing connection with client
+ */
 public class Reciever{
     private static Selector selector;
     private static Sender s;
@@ -27,7 +32,6 @@ public class Reciever{
     InetSocketAddress inetAddress;
     private ForkJoinPool answerGet = ForkJoinPool.commonPool();
     ExecutorService service = Executors.newFixedThreadPool(5);
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
 
 
