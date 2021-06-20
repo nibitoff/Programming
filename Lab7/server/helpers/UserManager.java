@@ -4,11 +4,21 @@ import data.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class describing commands that manage USERS table in database
+ */
 public class UserManager {
-    Connection c;
-    Statement stmt;
-
+    private Connection c;
+    private Statement stmt;
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private Lock readLock = readWriteLock.readLock();
+    private Lock writeLock = readWriteLock.writeLock();
 
 
     /*
@@ -64,7 +74,12 @@ public class UserManager {
         sql = "INSERT INTO USERS (LOGIN, PASSWORD) VALUES ('"+ login +"', '"+ password +"');";
         //sql = "SELECT L.*, S.Description FROM Log as L LEFT JOIN Stations as S ON L.id_station = S.id_station WHERE S.id_station = 5";
         System.out.println(sql);
+
+        writeLock.lock();
+        //readLock.lock();
         stmt.executeUpdate(sql);
+        //readLock.unlock();
+        writeLock.unlock();
 
         ResultSet rs = stmt.executeQuery( "SELECT * FROM USERS;" );
         Integer id = null;
@@ -91,7 +106,11 @@ public String checkingID(String command, Integer id, String userId) {
     stmt = c.createStatement();
 
         System.out.println("-- Opened database successfully");
+        readLock.lock();
+        //writeLock.lock();
         ResultSet rs = stmt.executeQuery("SELECT USERID FROM ORGANIZATIONS WHERE ID = " + id + " ;");
+        //writeLock.unlock();
+        readLock.unlock();
         result = "$CheckId$=" + command + "=" + id + "=";
         if (rs.next()) {
             String userFromData = rs.getString(1);
@@ -128,7 +147,9 @@ public String checkingID(String command, Integer id, String userId) {
             //sql = "SELECT L.*, S.Description FROM Log as L LEFT JOIN Stations as S ON L.id_station = S.id_station WHERE S.id_station = 5";
            // System.out.println(sql);
 
+            writeLock.lock();
             ResultSet rs = stmt.executeQuery( sql );
+            writeLock.unlock();
             Integer id = null;
             // int count = rs.next();
             if (rs.next()){
