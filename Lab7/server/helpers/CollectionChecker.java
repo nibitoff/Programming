@@ -16,10 +16,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * @author Sabitov Danil
  * @version 1.0
- * Class for checking file's collection
+ * Class for checking database's collection
  */
 public class CollectionChecker {
 
@@ -36,6 +40,9 @@ public class CollectionChecker {
     /**
      * HashMap collection for making an instruction
      */
+    ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    Lock readLock = readWriteLock.readLock();
+    Lock writeLock = readWriteLock.writeLock();
     public CollectionChecker() throws IOException {
 
         Integer id = null;
@@ -61,7 +68,10 @@ public class CollectionChecker {
             String sql;
 
             stmt = c.createStatement();
+
+            writeLock.lock();
             ResultSet rs = stmt.executeQuery( "SELECT * FROM ORGANIZATIONS;" );
+            writeLock.unlock();
             LinkedList <String> ids = new LinkedList<>();
             int goodElements = 0;
             int badElements = 0;
