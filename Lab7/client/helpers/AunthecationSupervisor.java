@@ -6,6 +6,11 @@ import commands.Login;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+/**
+ * @author Sabitov Danil
+ * @version 1.0
+ * Class for describing login and register action
+ */
 public class AunthecationSupervisor {
     private final String loginCommand = "sign_in";
     private final String registerCommand = "sign_up";
