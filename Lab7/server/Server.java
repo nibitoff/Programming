@@ -1,4 +1,3 @@
-
 import data.Organization;
 
 import java.io.DataInputStream;
@@ -7,7 +6,7 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+import helpers.*;
 public class Server {
     public static String myResult;
 
@@ -20,8 +19,10 @@ public class Server {
             System.out.println("Incorrect filepath was entered! Try again!");
             System.exit(1);
         }
-            Reciever reciever = new Reciever();
-            reciever.run();
+        Reciever reciever = new Reciever();
+        reciever.checkInput();
+        reciever.run();
+
 
     }
 }
