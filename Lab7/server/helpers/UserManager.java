@@ -64,8 +64,8 @@ public class UserManager {
         String result = "";
         try {
         Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
-            //c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
+            //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
+            c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
         c.setAutoCommit(false);
         System.out.println("-- Opened database successfully");
         String sql = "";
@@ -100,8 +100,8 @@ public String checkingID(String command, Integer id, String userId) {
     String result = "";
     try {
     Class.forName("org.postgresql.Driver");
-        c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
-        //c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
+        //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
+        c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
     c.setAutoCommit(false);
     stmt = c.createStatement();
 
@@ -136,8 +136,8 @@ public String checkingID(String command, Integer id, String userId) {
         String result = "";
         try {
             Class.forName("org.postgresql.Driver");
-            c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
-            //c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
+            //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
+            c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
             c.setAutoCommit(false);
             System.out.println("-- Opened database successfully");
             String sql = "";
