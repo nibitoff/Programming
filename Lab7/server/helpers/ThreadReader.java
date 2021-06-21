@@ -43,7 +43,7 @@ public class ThreadReader extends RecursiveTask<Sender> {
             ObjectMapper mapper = new ObjectMapper();
             s = mapper.readerForUpdating(s).readValue(result);
         } catch (NullPointerException | JsonProcessingException exception) {
-            System.out.println("Incorrect command");
+           // System.out.println("Incorrect command");
         }
         return s;
     }
