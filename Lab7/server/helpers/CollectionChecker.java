@@ -61,8 +61,8 @@ public class CollectionChecker {
             Statement stmt;
 
             Class.forName("org.postgresql.Driver");
-           // c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
-            c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
+            c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
+            //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
             c.setAutoCommit(false);
             System.out.println("-- Opened database successfully");
             String sql;
