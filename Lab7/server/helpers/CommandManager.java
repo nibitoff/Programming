@@ -1,6 +1,7 @@
 package helpers;
 import data.Organization;
 
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 /**
@@ -60,49 +61,50 @@ public class  CommandManager {
                     case "add":
                         System.out.println(consoleManager);
                         consoleManager.add(sender.getOrg());
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         result = consoleManager.show();
                         break;
                     case "update_id":
                         Organization org2 = sender.getOrg();
                         result = consoleManager.update_id(org2);
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "remove_by_id":
                         result = consoleManager.remove_by_id(sender.getOrg());
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "clear":
-                        result = consoleManager.clear();
-                        consoleManager.save();
+                        result = consoleManager.clear(sender.getOrg().getUserId());
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "execute_script":
-                        result = consoleManager.execute_script(sender.getFilePath());
-                        consoleManager.save();
+                        LinkedList<String> myFiles = new LinkedList<>();
+                        result = consoleManager.execute_script(sender.getFilePath(), sender.getOrg().getUserId(), myFiles);
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "exit":
                         consoleManager.exit();
                         break;
                     case "remove_first":
-                       result = consoleManager.remove_first();
-                        consoleManager.save();
+                       result = consoleManager.remove_first(sender.getOrg().getUserId());
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "add_if_min":
                         result = consoleManager.add_if_min(sender.getOrg());
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
 
                     case "remove_greater":
                         result = consoleManager.remove_greater(sender.getOrg());
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "count_by_full_name":
                         result = consoleManager.count_by_full_name(sender.getOrg());
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "filter_greater_than_annual_turnover":
                         result = consoleManager.filter_greater_than_annual_turnover(sender.getOrg());
-                        consoleManager.save();
+                        consoleManager.save(sender.getOrg().getUserId());
                         break;
                     case "print_unique_official_address":
                         result = consoleManager.print_unique_official_address();
