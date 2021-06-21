@@ -94,7 +94,10 @@ public class Reciever{
                            try {
                                 toClient = task.get();
                            }catch (ExecutionException e) {
-                               System.out.println("Error! Something wrong with thread executor");
+                               myKey.interestOps(0);
+                               client1.close();
+                               break;
+                               //System.out.println("Error! Something wrong with thread executor");
                            }
                            //String toClient = threadExecuter.run(s);
                            /* выполнение запроса
