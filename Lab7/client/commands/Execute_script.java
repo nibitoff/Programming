@@ -18,7 +18,10 @@ public class Execute_script {
      */
     public void execute_script(String filePath) throws InterruptedException {
         ClientTCP sender = new ClientTCP();
+        Organization newOrg = new Organization(null, null, null, "0",
+                null, null, null, null, ClientTCP.myUserID);
         sender.setCommand("execute_script");
+        sender.setOrg(newOrg);
         sender.setFilePath(filePath);
         sender.sending(sender);
     }
