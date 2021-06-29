@@ -19,6 +19,8 @@ import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Sabitov Danil
@@ -43,6 +45,8 @@ public class CollectionChecker {
     ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     Lock readLock = readWriteLock.readLock();
     Lock writeLock = readWriteLock.writeLock();
+    private static final Logger logger = Logger.getLogger(CollectionChecker.class.getName());
+
     public CollectionChecker() throws IOException {
 
         Integer id = null;
@@ -64,7 +68,7 @@ public class CollectionChecker {
             c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
             //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
             c.setAutoCommit(false);
-            System.out.println("-- Opened database successfully");
+            logger.log(Level.INFO,"-- Opened database successfully");
             String sql;
 
             stmt = c.createStatement();
@@ -80,22 +84,22 @@ public class CollectionChecker {
                 try {
                     id = rs.getInt("id");
                 }catch (NumberFormatException e){
-                    System.out.println("Value must be an Integer number! Check database!");
+                    ok = false;
                 }
                 try {
                     ids.add(id.toString());
                 }catch (Exception e){
-                    System.out.println("Value must be a String! Check database!");
+                    ok = false;
                 }
                 try {
                     name = rs.getString("name");
                 }catch (Exception e) {
-                    System.out.println("Value must be a String! Check database!");
+                    ok = false;
                 }
                 try {
                     annnualTurnover = rs.getLong("annualturnover");
                 }catch (NumberFormatException e){
-                    System.out.println("Value must be an Long number! Check database!");
+                    ok = false;
                 }
                 try {
                     creationDate = rs.getString("creationDate");
@@ -178,13 +182,13 @@ public class CollectionChecker {
             stmt.close();
             c.commit();
 
-            System.out.println("Collection was loaded succesfully! " + "\n" +
+            logger.log(Level.INFO,"Collection was loaded succesfully! " + "\n" +
                             "Number of correct elements: " + goodElements + "\n" +
                             "Number of corrupted elements: " + badElements);
             this.dateInitial = new Date();
 
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Syntax error! Try again!" + e.getMessage());
+            logger.log(Level.SEVERE,"Syntax error! Try again! " + e.getMessage());
             System.exit(1);
         }
     }
