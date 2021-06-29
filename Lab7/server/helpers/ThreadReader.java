@@ -18,7 +18,7 @@ public class ThreadReader extends RecursiveTask<Sender> {
     Sender s;
     SelectionKey myKey;
 
-    public void ThreadReader(SelectionKey myKey,SocketChannel client){
+    public ThreadReader(SelectionKey myKey,SocketChannel client){
         this.client = client;
 
     }
