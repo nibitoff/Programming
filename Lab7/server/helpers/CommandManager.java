@@ -3,6 +3,8 @@ import data.Organization;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Sabitov Danil
@@ -23,6 +25,7 @@ public class  CommandManager {
      * Field which separates user's input into a command and an argument to it
      */
     private String[] commandUser;
+    private static final Logger logger = Logger.getLogger(CommandManager.class.getName());
 
     {
         command = "";
@@ -119,14 +122,14 @@ public class  CommandManager {
                         result = userManager.checkingID(sender.getOrg().getName(), sender.getOrg().getId(), sender.getOrg().getUserId().toString());
                         break;
                     default:
-                        System.out.println("Unknown commmand. Try again! Write 'help' for list of available commands.");
+                        logger.log(Level.WARNING,"Unknown commmand. Try again! Write 'help' for list of available commands.");
                         break;
                 }
             } catch (ArrayIndexOutOfBoundsException exception) {
-                System.out.println("Element is not present in the array. Try again! Write 'help' for list of available commands.");
+                logger.log(Level.WARNING,"Element is not present in the array. Try again! Write 'help' for list of available commands.");
             }
         } catch (NoSuchElementException noSuchElementException) {
-            System.out.println("Program was stopped!");
+            logger.log(Level.INFO,"Program was stopped!");
             System.exit(1);
         }
         return result;
