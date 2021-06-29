@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -91,7 +92,7 @@ public class ClientTCP {
      */
     public void sending(ClientTCP sender)  throws InterruptedException {
         try {
-            socket = new InetSocketAddress("localhost", 7342);
+            socket = new InetSocketAddress("localhost", 3852);
             client = SocketChannel.open(socket);
 
             while (true) {
@@ -114,6 +115,13 @@ public class ClientTCP {
                         ByteBuffer bufferToRead = ByteBuffer.allocate(2048);
                         client.read(bufferToRead);
                         String result = new String(bufferToRead.array()).trim();
+                        if (result.contains("%%%exit%%%")){
+                            String res1 = result.split("%%%exit%%%")[0];
+                            System.out.println(res1);
+                           // TimeUnit.SECONDS.sleep(1);
+                            System.out.println("Thanks for using my program!");
+                            System.exit(1);
+                        }
                         if (result.indexOf("New user was added successfully!") > -1){
                             myUserID = Integer.parseInt(result.split("!")[1]);
                             result = "New user was added successfully!";
