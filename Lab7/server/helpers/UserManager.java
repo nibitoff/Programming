@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Sabitov Danil
@@ -19,7 +21,7 @@ public class UserManager {
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Lock readLock = readWriteLock.readLock();
     private Lock writeLock = readWriteLock.writeLock();
-
+    private static final Logger logger = Logger.getLogger(UserManager.class.getName());
 
     /*
            public void createTable(){
@@ -67,13 +69,13 @@ public class UserManager {
             //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
             c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
         c.setAutoCommit(false);
-        System.out.println("-- Opened database successfully");
+        logger.log(Level.INFO,"-- Opened database successfully");
         String sql = "";
-        System.out.println("Login = " + login + " " + "Password = " + password);
+        logger.log(Level.INFO,"Login = " + login + " " + "Password = " + password);
         stmt = c.createStatement();
         sql = "INSERT INTO USERS (LOGIN, PASSWORD) VALUES ('"+ login +"', '"+ password +"');";
         //sql = "SELECT L.*, S.Description FROM Log as L LEFT JOIN Stations as S ON L.id_station = S.id_station WHERE S.id_station = 5";
-        System.out.println(sql);
+
 
         writeLock.lock();
         //readLock.lock();
@@ -88,10 +90,10 @@ public class UserManager {
             }
         stmt.close();
         c.commit();
-        System.out.println("--New user was added successfully!" + id);
+        logger.log(Level.INFO,"--New user was added successfully!" + id);
         result +=  "New user was added successfully!" + id;
     }catch (ClassNotFoundException | SQLException |NullPointerException e) {
-        System.out.println("User was not added! "  + e.getMessage());
+            logger.log(Level.WARNING,"User was not added! "  + e.getMessage());
     }
         return result;
 }
@@ -105,7 +107,7 @@ public String checkingID(String command, Integer id, String userId) {
     c.setAutoCommit(false);
     stmt = c.createStatement();
 
-        System.out.println("-- Opened database successfully");
+        logger.log(Level.INFO,"-- Opened database successfully");
         readLock.lock();
         //writeLock.lock();
         ResultSet rs = stmt.executeQuery("SELECT USERID FROM ORGANIZATIONS WHERE ID = " + id + " ;");
@@ -126,7 +128,7 @@ public String checkingID(String command, Integer id, String userId) {
         stmt.close();
         c.commit();
     }catch (ClassNotFoundException | SQLException e){
-        System.out.println("Error with checking id!");
+        logger.log(Level.WARNING,"Error with checking id!");
     }
     return result;
 }
@@ -139,9 +141,9 @@ public String checkingID(String command, Integer id, String userId) {
             //c = DriverManager.getConnection("jdbc:postgresql://localhost:9800/studs","s313318", "mes758");
             c = DriverManager.getConnection("jdbc:postgresql://pg:5432/studs","s313318", "mes758");
             c.setAutoCommit(false);
-            System.out.println("-- Opened database successfully");
+            logger.log(Level.INFO,"-- Opened database successfully");
             String sql = "";
-            System.out.println("Login = " + login + " " + "Password = " + password);
+            logger.log(Level.INFO,"Login = " + login + " " + "Password = " + password);
             stmt = c.createStatement();
             sql = "SELECT * FROM USERS WHERE LOGIN = '"+ login + "' AND PASSWORD = '"+ password +"';";
             //sql = "SELECT L.*, S.Description FROM Log as L LEFT JOIN Stations as S ON L.id_station = S.id_station WHERE S.id_station = 5";
@@ -162,7 +164,7 @@ public String checkingID(String command, Integer id, String userId) {
             stmt.close();
             c.commit();
         }catch (ClassNotFoundException | SQLException |NullPointerException e) {
-            System.out.println("Error with testing login and password! "  + e.getMessage());
+            logger.log(Level.INFO,"Error with testing login and password! "  + e.getMessage());
         }
         return result;
     }
