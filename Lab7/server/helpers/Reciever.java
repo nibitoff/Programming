@@ -18,6 +18,8 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -28,10 +30,12 @@ import java.util.concurrent.*;
 public class Reciever{
     private static Selector selector;
     private static Sender s;
-    ServerSocketChannel socket;
-    InetSocketAddress inetAddress;
-    private ForkJoinPool answerGet = ForkJoinPool.commonPool();
-    ExecutorService service = Executors.newFixedThreadPool(5);
+    private ServerSocketChannel socket;
+    private InetSocketAddress inetAddress;
+    private final int numOfThreads = Runtime.getRuntime().availableProcessors();
+    private final ForkJoinPool answerGet = new ForkJoinPool(numOfThreads);
+    private final ExecutorService service = Executors.newFixedThreadPool(numOfThreads);
+    private static final Logger logger = Logger.getLogger(Reciever.class.getName());
 
 
 
@@ -39,7 +43,7 @@ public class Reciever{
         try {
             selector = Selector.open();
             socket = ServerSocketChannel.open();
-            inetAddress = new InetSocketAddress("localhost", 7342);
+            inetAddress = new InetSocketAddress("localhost", 3852);
             socket.bind(inetAddress);
             socket.configureBlocking(false);
             socket.accept();
@@ -60,9 +64,7 @@ public class Reciever{
                     } else if (myKey.isReadable()) {
                         SocketChannel client1 = (SocketChannel) myKey.channel();
                        try {
-                        ThreadReader threadReader = new ThreadReader();
-                        threadReader.ThreadReader(myKey,client1);
-                        s = threadReader.compute();
+                        s = answerGet.invoke(new ThreadReader(myKey, client1));
                         //answerGet.execute(new ThreadReader().ThreadReader(client1));
                         /*
                         SocketChannel client1 = (SocketChannel) myKey.channel();
@@ -108,10 +110,19 @@ public class Reciever{
                             */
 
 
-
-                           ThreadSender threadSender = new ThreadSender(client1);
-                           threadSender.sendingMessage(toClient);
-
+                           //service.submit(new ThreadSender(client1, toClient));
+                           String finalToClient = toClient;
+                           Runnable sending = () -> {
+                               try {
+                                   byte[] message = finalToClient.getBytes();
+                                   ByteBuffer bufferToSend = ByteBuffer.wrap(message);
+                                   client1.write(bufferToSend);
+                                   logger.log(Level.INFO,"The message was sent to client!");
+                               } catch (Exception e) {
+                                   logger.log(Level.WARNING,"Error! Something wrong with sending message to client!");
+                               }
+                           };
+                           service.execute(sending);
 
                            /*
                             byte[] message = toClient.getBytes();
@@ -124,7 +135,7 @@ public class Reciever{
 
                         } catch (NullPointerException exception) {
                         } catch (InterruptedException e) {
-                           e.printStackTrace();
+                           logger.log(Level.WARNING, e.getMessage());
                        }
 
 
@@ -145,12 +156,12 @@ public class Reciever{
                     String[] userCommand = (scanner.nextLine().trim() + " ").split(" ", 2);
                     userCommand[1] = userCommand[1].trim();
                     if (userCommand[0].equals("exit")) {
-                        System.out.println("Server stopped!");
+                        logger.log(Level.INFO,"Server stopped!");
                         System.exit(0);
                     }
                 }
             } catch (NoSuchElementException e) {
-                System.out.println("Server stopped!");
+                logger.log(Level.INFO,"Server stopped!");
                 System.exit(0);
             }
         };
