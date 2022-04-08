@@ -1,2 +1,2 @@
 # Programming Java
-Labs (1-7) from first year at ITMO.
+Programming labs from first year at ITMO.
